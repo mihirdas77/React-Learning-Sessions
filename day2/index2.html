@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic List Rendering</title>
+</head>
+<body>
+  <div id="second"></div>
+  <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    // Define the ItemList component
+    function ItemList({ items }) {
+      // Check if the items array is empty
+      if (items.length === 0) {
+        return <p>No items found</p>;
+      }
+
+      // Render list items for each item in the array
+      const itemList = items.map((item, index) => (
+        <li key={index}>{item}</li>
+      ));
+
+      // Return the unordered list containing list items
+      return <ul>{itemList}</ul>;
+    }
+
+    // Example usage and testing
+    const secondElement = document.getElementById('second');
+    ReactDOM.render(
+      <div>
+        <h1>My Items List</h1>
+        <ItemList items={["Laptop", "Headphones", "Books"]} />
+        <hr />
+        <ItemList items={[]} />
+      </div>,
+      secondElement
+    );
+  </script>
+</body>
+</html>

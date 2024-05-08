@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Greeting Component</title>
+  </head>
+  <body>
+    <div id="third"></div>
+  </body>
+  <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    // Creating the Greeting component
+    function Greeting(props) {
+      // Destructuring the props
+      const { message, name } = props;
+
+      // Rendering the component
+      return <p>{`${message}, ${name}`}</p>;
+    }
+
+    // Rendering the Greeting component with different props
+    ReactDOM.render(
+      <div>
+        <Greeting message="Hello" name="Rahul" />
+        <Greeting message="Hi" name="Soni" />
+        <Greeting message="Greetings" name="Pankaj" />
+      </div>,
+      document.getElementById('third')
+    );
+  </script>
+</html>
