@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #ca6a6a;
+        }
+
+        .todo-container {
+            background-color: #c72fc4;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 400px;
+            max-width: 90%;
+            overflow: hidden;
+        }
+
+        .todo-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .todo-header h2 {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .todo-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        .todo-list {
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .todo-item:hover {
+            background-color: #f9f9f9;
+        }
+
+        .todo-item.completed {
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        .todo-item span {
+            flex-grow: 1;
+        }
+
+        .todo-item button {
+            background-color: transparent;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .todo-item button:hover {
+            color: #ff5a5f;
+        }
+
+        .filter-buttons {
+            
+            margin-top: 10px;
+        }
+
+        .filter-buttons button {
+            margin-right: 5px;
+            cursor: pointer;
+            background-color: transparent;
+            border: none;
+            font-size: 14px;
+            text-decoration: underline;
+            color: #f9f9f9;
+            transition: color 0.3s ease;
+        }
+
+        .filter-buttons button:hover {
+            color: #333;
+        }
+        h2{
+            text-shadow: #f9f9f9;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+        const { useState } = React;
+
+        function TodoList() {
+            const [todos, setTodos] = useState([]);
+            const [filter, setFilter] = useState('all');
+
+            const addTodo = (task) => {
+                if (task.trim() !== '') {
+                    setTodos([...todos, { task, completed: false }]);
+                }
+            };
+
+            const toggleTodo = (index) => {
+                const updatedTodos = [...todos];
+                updatedTodos[index].completed = !updatedTodos[index].completed;
+                setTodos(updatedTodos);
+            };
+
+            const removeTodo = (index) => {
+                const updatedTodos = [...todos];
+                updatedTodos.splice(index, 1);
+                setTodos(updatedTodos);
+            };
+
+            const filteredTodos = filter === 'all' ? todos :
+                filter === 'active' ? todos.filter(todo => !todo.completed) :
+                todos.filter(todo => todo.completed);
+
+            return (
+                <div className="todo-container">
+                    <h2>Todo List</h2>
+                    <div className="todo-header">
+                       
+                        <input type="text" className="todo-input" placeholder="Add new task" onKeyDown={(e) => e.key === 'Enter' && addTodo(e.target.value)} />
+                    </div>
+                    <ul className="todo-list">
+                        {filteredTodos.map((todo, index) => (
+                            <li key={index} className={`todo-item ${todo.completed ? 'completed' : ''}`} onClick={() => toggleTodo(index)}>
+                                <span>{todo.task}</span>
+                                <button onClick={(e) => { e.stopPropagation(); removeTodo(index); }}>Remove</button>
+                            </li>
+                        ))}
+                    </ul>
+                    <div className="filter-buttons">
+                        <button onClick={() => setFilter('all')}>All</button>
+                        <button onClick={() => setFilter('active')}>Active</button>
+                        <button onClick={() => setFilter('completed')}>Completed</button>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<TodoList />, document.getElementById('root'));
+    </script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive Color picker</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    
+    function ColorInput(){
+        let [color,setcolor]=React.useState('')
+
+        function handleChange(event){
+            setcolor(event.target.value)
+
+        }
+        let styles={
+            width: '185px',
+              height: '180px',
+              backgroundColor:color,
+              marginTop: '12px',
+              justifyContent:"center"
+        }
+       return(
+        
+        <div>
+            <input type="text" value={color} onChange={handleChange} placeholder="Enter your HEX color"/>
+           {color.length==4 || color.length==7 ? <div style={styles}>
+        </div>: color.length === 0 ? <p></p> : <p>Invaild input</p>}
+        
+
+    </div>
+       ) 
+    }
+    ReactDOM.createRoot(document.getElementById("root")).render(<ColorInput/>)
+  </script>
+</html>
