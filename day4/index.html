@@ -6,12 +6,14 @@
   <title>Greeting Cards</title>
 </head>
 <body>
+
+  
   <div id="root"></div>
 
   <style>
     /* Styles for the greeting card */
     .card {
-      border: 1.8px solid #0ec664;
+      border: 1.8px solid #2898a7;
       border-radius: 5px;
       padding: 20px;
       margin: 60px;
@@ -29,7 +31,9 @@
     /* Styling for the card on hover */
     .card:hover {
         background-color: #66A5AD;
+        border: 3px solid #C4DFE6;
         color: whitesmoke;
+        /* padding-bottom: 40%; */
         transform: scale(1.5);
         box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
       }
@@ -37,7 +41,15 @@
     /* Styling for the container */
     .cont{
       display: flex;
-      /* border: 1.8px solid red; */
+      border: 5px dotted #66A5AD;
+      border-radius: 20px;
+      /* Border-style: Defines the line style of the border using values like solid, dashed, dotted, double, groove, ridge, inset, and outset
+      Solid: Displays a single, straight line
+      Double: Displays two straight lines that add up to the pixel size defined by border-width
+      Groove: Displays a border with a carved appearance
+      Ridge: Displays a border with an extruded appearance
+      Inset: Makes the element appear embedded
+      Outset: Makes the element appear embossed */
     }   
   </style>
 

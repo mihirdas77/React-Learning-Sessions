@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Profiles</title>
+    <style>
+      /* Add your CSS styles here */
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .search-input {
+        text-align: center;
+        border-radius: 20px;
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        font-size: 16px;
+        border: none;
+        background-color: #ffd2d2;
+      }
+      .user-profile {
+        border-radius: 30px;
+        color: #ffffff;
+        text-align: center;
+        background-color: #d16868;
+        border: 1px solid #ff6565;
+        padding: 10px;
+        margin-left: 20px;
+        margin-bottom: 10px;
+        box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+      }
+      .user-profile:hover {
+        text-align: center;
+        background-color: #66A5AD;
+        border: 3px solid #C4DFE6;
+        color: whitesmoke;
+        /* padding-bottom: 40%; */
+        transform: scale(1.2);
+        box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" class="container"></div>
+    <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+    <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+      // UserProfile component to render individual user profiles
+      function UserProfile({ user }) {
+        return (
+          <div className="user-profile">
+            <h2>{user.name}</h2>
+            <p>Email: {user.email}</p>
+          </div>
+        );
+      }
+
+      // Main App component
+      class App extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            searchQuery: "",
+          };
+        }
+
+        handleSearchChange = (event) => {
+          this.setState({ searchQuery: event.target.value });
+        };
+
+        render() {
+          const { searchQuery } = this.state;
+          const filteredUsers = users.filter((user) =>
+            user.name.toLowerCase().includes(searchQuery.toLowerCase())
+          );
+
+          return (
+            <div>
+              <input
+                type="text"
+                className="search-input"
+                placeholder="Search by name"
+                value={searchQuery}
+                onChange={this.handleSearchChange}
+              />
+              {filteredUsers.map((user) => (
+                <UserProfile key={user.id} user={user} />
+              ))}
+            </div>
+          );
+        }
+      }
+
+      // Sample user data
+      const users = [
+        { id: 1, name: "John Doe", email: "john@example.com" },
+        { id: 2, name: "Jane Smith", email: "jane@example.com" },
+        { id: 3, name: "Alice Johnson", email: "alice@example.com" },
+        { id: 4, name: "Bob Brown", email: "bob@example.com" },
+      ];
+
+      // Render the App component
+      ReactDOM.render(<App />, document.getElementById("root"));
+    </script>
+  </body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ToDo List</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+    .container {
+      max-width: 400px;
+      margin: 20px auto;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+
+    .todo-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .todo-item:last-child {
+      border-bottom: none;
+    }
+
+    .todo-item input[type="checkbox"] {
+      margin-right: 100px;
+    }
+
+    .delete-btn {
+      background-color: #ff4f4f;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      padding: 5px 10px;
+      cursor: pointer;
+      margin-left: auto;
+    }
+
+    .delete-btn:hover {
+      background-color: #e43f3f;
+    }
+
+    .completed {
+      text-decoration: line-through;
+      color: #888;
+    }
+
+    .form-container {
+      margin-bottom: 20px;
+    }
+
+    .input-field {
+      width: 70%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+      margin-right: 10px;
+    }
+
+    .add-btn {
+      margin-left: 27px;
+      padding: 10px 18px;
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .add-btn:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script type="text/babel">
+    // ToDoList component
+    class ToDoList extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+          todos: [],
+          inputValue: ''
+        };
+      }
+
+      handleChange = (e) => {
+        this.setState({ inputValue: e.target.value });
+      };
+
+      handleSubmit = (e) => {
+        e.preventDefault();
+        if (this.state.inputValue.trim() !== '') {
+          const newTodo = {
+            id: Date.now(),
+            content: this.state.inputValue,
+            completed: false
+          };
+          this.setState((prevState) => ({
+            todos: [...prevState.todos, newTodo],
+            inputValue: ''
+          }));
+        }
+      };
+
+      handleDelete = (id) => {
+        this.setState((prevState) => ({
+          todos: prevState.todos.filter((todo) => todo.id !== id)
+        }));
+      };
+
+      handleToggle = (id) => {
+        this.setState((prevState) => ({
+          todos: prevState.todos.map((todo) =>
+            todo.id === id ? { ...todo, completed: !todo.completed } : todo
+          )
+        }));
+      };
+
+      render() {
+        return (
+          <div className="container">
+            <form onSubmit={this.handleSubmit} className="form-container">
+              <input
+                type="text"
+                className="input-field"
+                placeholder="Add new ToDo"
+                value={this.state.inputValue}
+                onChange={this.handleChange}
+              /><button type="submit" className="add-btn">
+                Add
+              </button>
+              
+            </form>
+            
+            {this.state.todos.map((todo) => (
+              <div className="todo-item" key={todo.id}>
+                <input
+                  type="checkbox"
+                  checked={todo.completed}
+                  onChange={() => this.handleToggle(todo.id)}
+                />
+                <span className={todo.completed ? 'completed' : ''}>
+                  {todo.content}
+                </span>
+                <button
+                  className="delete-btn"
+                  onClick={() => this.handleDelete(todo.id)}
+                >
+                  Delete
+                </button>
+              </div>
+            ))}
+          </div>
+        );
+      }
+    }
+
+    // Render ToDoList component
+    ReactDOM.render(<ToDoList />, document.getElementById('root'));
+  </script>
+</body>
+</html>
