@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Advanced Task Manager</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+      }
+
+      form input,
+      form button {
+        margin-bottom: 10px;
+        padding: 8px;
+        font-size: 16px;
+      }
+
+      button {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      li {
+        background-color: #f2f2f2;
+        padding: 10px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+      }
+
+      li input,
+      li button {
+        margin-right: 10px;
+      }
+
+      li button {
+        background-color: #f44336;
+      }
+
+      li button:hover {
+        background-color: #d32f2f;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="text/babel">
+      const TaskForm = ({ onSubmit }) => {
+        const [title, setTitle] = React.useState('');
+        const [isCompleted, setIsCompleted] = React.useState(false);
+        const [assignee, setAssignee] = React.useState('');
+
+        const handleSubmit = (e) => {
+          e.preventDefault();
+          onSubmit({ title, isCompleted, assignee });
+          setTitle('');
+          setIsCompleted(false);
+          setAssignee('');
+        };
+
+        return (
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              placeholder="Task Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Assignee"
+              value={assignee}
+              onChange={(e) => setAssignee(e.target.value)}
+            />
+            <label>
+              <input
+                type="checkbox"
+                checked={isCompleted}
+                onChange={(e) => setIsCompleted(e.target.checked)}
+              />
+              Completed
+            </label>
+            <button type="submit">Add Task</button>
+          </form>
+        );
+      };
+
+      const TaskList = ({ tasks, onUpdate, onDelete }) => {
+        return (
+          <ul>
+            {tasks.map((task) => (
+              <li key={task.id}>
+                <input
+                  type="text"
+                  value={task.title}
+                  onChange={(e) => onUpdate({ ...task, title: e.target.value })}
+                />
+                <input
+                  type="text"
+                  value={task.assignee}
+                  onChange={(e) => onUpdate({ ...task, assignee: e.target.value })}
+                />
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={task.isCompleted}
+                    onChange={(e) => onUpdate({ ...task, isCompleted: e.target.checked })}
+                  />
+                  Completed
+                </label>
+                <button onClick={() => onDelete(task.id)}>Delete</button>
+              </li>
+            ))}
+          </ul>
+        );
+      };
+
+      const App = () => {
+        const [tasks, setTasks] = React.useState([]);
+        const [filter, setFilter] = React.useState('all');
+        const [assigneeFilter, setAssigneeFilter] = React.useState('');
+
+        React.useEffect(() => {
+          axios.get('http://localhost:3000/tasks').then((response) => {
+            setTasks(response.data);
+          });
+        }, []);
+
+        const addTask = (task) => {
+          axios.post('http://localhost:3000/tasks', task).then((response) => {
+            setTasks([...tasks, response.data]);
+          });
+        };
+
+        const updateTask = (updatedTask) => {
+          axios.put(`http://localhost:3000/tasks/${updatedTask.id}`, updatedTask).then((response) => {
+            setTasks(tasks.map((task) => (task.id === updatedTask.id ? response.data : task)));
+          });
+        };
+
+        const deleteTask = (id) => {
+          axios.delete(`http://localhost:3000/tasks/${id}`).then(() => {
+            setTasks(tasks.filter((task) => task.id !== id));
+          });
+        };
+
+        const filteredTasks = tasks.filter((task) => {
+          if (filter === 'incomplete') {
+            return !task.isCompleted;
+          } else if (filter === 'assignee') {
+            return task.assignee.includes(assigneeFilter);
+          } else {
+            return true;
+          }
+        });
+
+        return (
+          <div>
+            <h1>Advanced Task Manager</h1>
+            <TaskForm onSubmit={addTask} />
+            <button onClick={() => setFilter('all')}>Get All Tasks</button>
+            <button onClick={() => setFilter('incomplete')}>Show Incomplete Tasks</button>
+            <input
+              type="text"
+              placeholder="Filter by Assignee"
+              value={assigneeFilter}
+              onChange={(e) => setAssigneeFilter(e.target.value)}
+            />
+            <TaskList tasks={filteredTasks} onUpdate={updateTask} onDelete={deleteTask} />
+          </div>
+        );
+      };
+
+      ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+  </body>
+</html>

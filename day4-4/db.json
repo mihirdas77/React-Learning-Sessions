@@ -1,0 +1,22 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Create a new React project",
+      "isCompleted": false,
+      "assignee": "Sunita"
+    },
+    {
+      "id": 2,
+      "title": "Implement Task Manager functionality",
+      "isCompleted": false,
+      "assignee": "Ronak"
+    },
+    {
+      "id": 3,
+      "title": "Test the application",
+      "isCompleted": false,
+      "assignee": "Vishnu"
+    }
+  ]
+}
