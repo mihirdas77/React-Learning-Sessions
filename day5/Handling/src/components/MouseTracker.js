@@ -1,15 +1,15 @@
+
 import React, { useEffect } from 'react';
 
-const EventComponent = () => {
+
+const MouseTracker = () => {
   useEffect(() => {
     const handleMouseMove = (event) => {
-      console.log('Mouse X:', event.clientX);
-      // You can update component state here if needed
+      console.log('Mouse coordinates:', { x: event.clientX, y: event.clientY });
     };
 
     window.addEventListener('mousemove', handleMouseMove);
 
-    // Cleanup function
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
     };
@@ -17,9 +17,10 @@ const EventComponent = () => {
 
   return (
     <div>
-      <p>Move your mouse to see the X coordinate logged to the console.</p>
+      <h2>Mouse Tracker</h2>
+      <p>Check the console for mouse coordinates.</p>
     </div>
   );
 };
 
-export default EventComponent;
+export default MouseTracker;
