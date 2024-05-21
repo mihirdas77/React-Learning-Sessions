@@ -522,6 +522,3 @@ function NestedTaskList() {
 export default NestedTaskList;
 ```
 
-### Submission Instructions
-
-- Push your code to GitHub and share the repository link.
